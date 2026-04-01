@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Elite Apostas IA</title>
+<style>
+body {background:#0f172a;color:white;font-family:Arial;text-align:center;}
+.box {background:#1e293b;padding:20px;margin:50px auto;width:320px;border-radius:10px;}
+input {display:block;margin:10px auto;padding:10px;width:90%;}
+button {padding:10px;margin:5px;background:#22c55e;border:none;cursor:pointer;width:95%;}
+#ia {margin-top:15px;font-size:14px;text-align:left;}
+</style>
+</head>
+<body>
+
+<h1>🔥 Elite Apostas IA</h1>
+
+<div class="box">
+<input id="jogo" placeholder="Ex: Brasil x Argentina">
+<input id="odd" placeholder="Odd (1.80)">
+<input id="valor" placeholder="Valor (R$)">
+
+<button onclick="calcular()">Calcular</button>
+<button onclick="analisarIA()">Analisar com IA</button>
+
+<p id="resultado"></p>
+<p id="ia"></p>
+</div>
+
+<script>
+function calcular() {
+  let odd = parseFloat(document.getElementById("odd").value);
+  let valor = parseFloat(document.getElementById("valor").value);
+
+  if (!odd || !valor) {
+    alert("Preencha os campos corretamente");
+    return;
+  }
+
+  let retorno = odd * valor;
+  let lucro = retorno - valor;
+  let prob = (1 / odd) * 100;
+
+  document.getElementById("resultado").innerHTML =
+    `Retorno: R$ ${retorno.toFixed(2)}<br>
+     Lucro: R$ ${lucro.toFixed(2)}<br>
+     Probabilidade: ${prob.toFixed(1)}%`;
+}
+
+async function analisarIA() {
+  let jogo = document.getElementById("jogo").value;
+  let odd = document.getElementById("odd").value;
+
+  document.getElementById("ia").innerText = "Analisando...";
+
+  let resposta = await fetch("/api/ia", {
+    method: "POST",
+    body: JSON.stringify({ jogo, odd })
+  });
+
+  let dados = await resposta.json();
+  document.getElementById("ia").innerText = dados.resultado;
+}
+</script>
+
+</body>
+</html>
