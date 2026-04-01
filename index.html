@@ -51,17 +51,32 @@ async function analisarIA() {
   let jogo = document.getElementById("jogo").value;
   let odd = document.getElementById("odd").value;
 
+  if (!jogo || !odd) {
+    alert("Preencha os campos");
+    return;
+  }
+
   document.getElementById("ia").innerText = "Analisando...";
 
-  let resposta = await fetch("/api/ia", {
-    method: "POST",
-    body: JSON.stringify({ jogo, odd })
-  });
+  try {
+    let resposta = await fetch("/api/ia", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ jogo, odd })
+    });
 
-  let dados = await resposta.json();
-  document.getElementById("ia").innerText = dados.resultado;
+    let dados = await resposta.json();
+
+    document.getElementById("ia").innerText =
+      dados.resultado || "Erro sem resposta";
+
+  } catch (erro) {
+    document.getElementById("ia").innerText =
+      "Erro real: " + erro.message;
+  }
 }
-</script>
 
 </body>
 </html>
